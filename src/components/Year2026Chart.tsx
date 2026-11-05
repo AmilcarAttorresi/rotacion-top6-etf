@@ -53,7 +53,7 @@ function monthTicks(dates: readonly string[]): string[] {
 }
 
 function markerText(event: RebalanceEvent): string {
-  return event.from === event.to ? event.to : `${event.from}\u2192${event.to}`;
+  return event.from === event.to ? event.to : `${event.from}→${event.to}`;
 }
 
 function Tip({
@@ -305,7 +305,7 @@ function Year2026Chart({ basket, rotation }: { basket: Basket; rotation: BasketR
           <div className="rounded-xl bg-panel-2 px-3 py-3">
             <dt className="text-xs text-faint">YTD 2026 en la semilla</dt>
             <dd className="mt-1 text-2xl">
-              {seedYear ? <SignedReturn value={seedYear.strategy} /> : "\u2014"}
+              {seedYear ? <SignedReturn value={seedYear.strategy} /> : "—"}
             </dd>
             {seedYear?.note ? <p className="text-xs text-muted">{seedYear.note}</p> : null}
           </div>
@@ -341,7 +341,7 @@ function Year2026Chart({ basket, rotation }: { basket: Basket; rotation: BasketR
                       <span className="font-mono text-xs text-faint">{formatDateNumeric(event.date)}</span>
                     </th>
                     <td className="px-3 py-3 font-mono">
-                      {event.from} \u2192 {event.to}
+                      {event.from} → {event.to}
                       {event.date === rotation.baseDate ? (
                         <span className="mt-1 block font-sans text-xs text-muted">Arranque de 2026</span>
                       ) : null}
@@ -354,7 +354,7 @@ function Year2026Chart({ basket, rotation }: { basket: Basket; rotation: BasketR
                       const marked = holding.ticker === worst;
                       return (
                         <td key={holding.ticker} className={cn("px-3 py-3 text-right", marked && "bg-strategy/15 font-semibold")}>
-                          {value === undefined ? "\u2014" : <SignedReturn value={value} />}
+                          {value === undefined ? "—" : <SignedReturn value={value} />}
                         </td>
                       );
                     })}
@@ -366,7 +366,7 @@ function Year2026Chart({ basket, rotation }: { basket: Basket; rotation: BasketR
                   <th scope="row" className="px-4 py-3 text-left font-normal">
                     <span className="block font-medium">{quarterLabel(rotation.partial.id)} en curso</span>
                     <span className="font-mono text-xs text-faint">
-                      {formatDateNumeric(rotation.partial.from)} \u2192 {formatDateNumeric(rotation.partial.to)}
+                      {formatDateNumeric(rotation.partial.from)} → {formatDateNumeric(rotation.partial.to)}
                     </span>
                   </th>
                   <td className="px-3 py-3 text-muted">Sin rotación todavía</td>
@@ -375,7 +375,7 @@ function Year2026Chart({ basket, rotation }: { basket: Basket; rotation: BasketR
                     const marked = holding.ticker === rotation.partial?.scores[0]?.ticker;
                     return (
                       <td key={holding.ticker} className={cn("px-3 py-3 text-right", marked && "bg-strategy/10")}>
-                        {value === undefined ? "\u2014" : <SignedReturn value={value} />}
+                        {value === undefined ? "—" : <SignedReturn value={value} />}
                       </td>
                     );
                   })}
