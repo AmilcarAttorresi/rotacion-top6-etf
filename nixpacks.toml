@@ -1,5 +1,14 @@
-# Railway / Nixpacks. Node install and `npm run build` stay on the Node provider.
-# Start serves the Vite SPA and falls back to index.html for client routes.
+# Railway / Nixpacks.
+# The Node 22 image Nixpacks still installs is 22.11.0. That is below Vite 8
+# (>=22.12) and React Router 8 (>=22.22). This app builds with Vite 6 and
+# React Router 7, which run on Node 20 and on 22.11. Pin major 20 so the
+# deploy does not pick 22.11.
+# Dashboard override, if you set one: NIXPACKS_NODE_VERSION=20
+# A Node 22 pin only works once the image is >=22.22 (NIXPACKS_NODE_VERSION=22
+# is not enough while Nixpacks still ships 22.11).
+
+[variables]
+NIXPACKS_NODE_VERSION = "20"
 
 [start]
 cmd = "npm start"
