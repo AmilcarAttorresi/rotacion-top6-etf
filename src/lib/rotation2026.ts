@@ -153,7 +153,7 @@ export function buildRotation(basket: Basket): BasketRotation {
   const priceOn = (ticker: string, date: string): number => {
     const value = books.get(ticker)?.get(date);
     if (value === undefined || !Number.isFinite(value) || value <= 0) {
-      throw new Error(`Precio inválido de ${ticker} el ${date}.`);
+      throw new Error(`Precio inv\u00e1lido de ${ticker} el ${date}.`);
     }
     return value;
   };
@@ -183,7 +183,7 @@ export function buildRotation(basket: Basket): BasketRotation {
   }
 
   const entry = rebalances[0];
-  if (!entry) throw new Error(`No hay rotación de arranque para ${basket.id}.`);
+  if (!entry) throw new Error(`No hay rotaci\u00f3n de arranque para ${basket.id}.`);
 
   const chartDates = calendar.filter((date) => date >= base.date);
   const points: RotationPoint[] = [];
