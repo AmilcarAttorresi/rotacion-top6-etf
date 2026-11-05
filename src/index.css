@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --color-canvas: #090b0e;
+  --color-panel: #13161c;
+  --color-panel-2: #1c2029;
+  --color-line: #343026;
+  --color-ink: #f4f1ea;
+  --color-muted: #b7b1a6;
+  --color-faint: #948e84;
+  --color-strategy: #e4b15a;
+  --color-bench: #9eb6f0;
+  --color-fund: #d2c4f8;
+  --color-hold: #8fd0c6;
+  --color-best: #f0b4bc;
+  --color-up: #b6ebc8;
+  --color-down: #ffb4c0;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(1100px 480px at -10% -20%, color-mix(in oklab, var(--color-strategy) 16%, transparent), transparent 55%),
+    radial-gradient(900px 420px at 110% -10%, color-mix(in oklab, var(--color-bench) 14%, transparent), transparent 50%),
+    var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--color-strategy) 45%, transparent);
+  color: var(--color-ink);
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 50;
+  border-radius: 999px;
+  background: var(--color-strategy);
+  color: var(--color-canvas);
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+.chart-link .recharts-rectangle,
+.chart-link .recharts-bar-rectangle {
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
