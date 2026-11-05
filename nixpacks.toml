@@ -1,0 +1,5 @@
+# Railway / Nixpacks. Node install and `npm run build` stay on the Node provider.
+# Start serves the Vite SPA and falls back to index.html for client routes.
+
+[start]
+cmd = "npm start"
