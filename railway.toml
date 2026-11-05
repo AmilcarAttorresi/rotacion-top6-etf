@@ -1,8 +1,8 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "npm install --no-package-lock && npm run build"
+buildCommand = "bash scripts/use-node22.sh && if [ -x /opt/node22/bin/node ]; then export PATH=/opt/node22/bin:$PATH; fi && node -v && npm install --no-package-lock && npm run build"
 
 [deploy]
-startCommand = "npm start"
+startCommand = "if [ -x /opt/node22/bin/node ]; then export PATH=/opt/node22/bin:$PATH; fi; npm start"
 restartPolicyType = "ON_FAILURE"
 healthcheckPath = "/"

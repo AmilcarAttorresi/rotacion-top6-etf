@@ -8,7 +8,7 @@ Además, 2026 se puede ver día por día: los seis papeles, el ETF y la rotació
 
 ## Correr en local
 
-Hace falta Node.js 20 o superior. En Railway el pin es Node 20: la imagen de Nixpacks para Node 22 sigue en 22.11.0, y esa versión no alcanza para Vite 8 ni React Router 8. El build usa Vite 6 y React Router 7, que corren en Node 20 y también en 22.11.
+Hace falta Node.js 22.12 o superior. Node 18 no tiene `util.styleText` y Vite no arranca. El pin de Railway es Node 22.
 
 ```bash
 npm install
@@ -30,7 +30,7 @@ La salida queda en `dist/`. Las rutas son absolutas desde la raíz del dominio. 
 
 El repo ya trae `railway.toml`, `nixpacks.toml` y `.nvmrc`. Railway corre `npm run build` y después `npm start`, que sirve `dist` con fallback a `index.html` (hace falta para `/canasta/dia` y el resto). Escucha en `0.0.0.0:$PORT`. No hace falta Docker ni variables secretas.
 
-Nixpacks toma Node desde `NIXPACKS_NODE_VERSION=20` (está en `nixpacks.toml` y en `.nvmrc`). Si el servicio tiene una variable en el dashboard, dejala en `NIXPACKS_NODE_VERSION=20`. No pongas `22`: hoy esa major instala 22.11.0 y el build se cae. El install de Nixpacks es `npm install --no-package-lock`: las versiones que importan están fijas en `package.json` (Vite 6.4.5, plugin React 4.7.0, React Router 7.18.5). Node 22.22 o superior también serviría, pero Nixpacks todavía no lo entrega con `NIXPACKS_NODE_VERSION=22`.
+Nixpacks toma Node 22: `NIXPACKS_NODE_VERSION=22` en `nixpacks.toml`, `.nvmrc` en `22`, y `nodejs_22` en el setup. Si el servicio tiene una variable en el dashboard, dejala en `NIXPACKS_NODE_VERSION=22`. `package.json` pide `node >=22.12.0`. Si la imagen de Nixpacks trae 18 o 22.11, `scripts/use-node22.sh` instala Node 22.23.4 antes del build. El install es `npm install --no-package-lock`: Vite queda en 6.4.5, el plugin de React en 4.7.0 y React Router en 7.18.5.
 
 ## Cómo actualizar los totales
 

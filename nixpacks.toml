@@ -1,24 +1,33 @@
 # Railway / Nixpacks.
-# The Node 22 image Nixpacks still installs is 22.11.0. That is below Vite 8
-# (>=22.12) and React Router 8 (>=22.22). This app builds with Vite 6 and
-# React Router 7, which run on Node 20 and on 22.11. Pin major 20 so the
-# deploy does not pick 22.11.
-# Dashboard override, if you set one: NIXPACKS_NODE_VERSION=20
-# A Node 22 pin only works once the image is >=22.22 (NIXPACKS_NODE_VERSION=22
-# is not enough while Nixpacks still ships 22.11).
-# Install ignores package-lock.json. The versions that matter are pinned in
-# package.json (vite 6.4.5, @vitejs/plugin-react 4.7.0, react-router 7.18.5).
+# Node 18 has no util.styleText, and Vite refuses to build there.
+# Ask the Node provider for 22, and install Node 22.23.4 when the image
+# is older than 22.12 (Nixpacks' nodejs_22 has been 22.11.0).
+# Dashboard variable, if you set one: NIXPACKS_NODE_VERSION=22
+
+providers = ["node"]
 
 [variables]
-NIXPACKS_NODE_VERSION = "20"
+NIXPACKS_NODE_VERSION = "22"
+
+[phases.setup]
+nixPkgs = ["nodejs_22", "curl", "xz"]
+cmds = ["bash scripts/use-node22.sh"]
 
 [phases.install]
 dependsOn = ["setup"]
-cmds = ["npm install --no-package-lock"]
+cmds = [
+  "if [ -x /opt/node22/bin/node ]; then export PATH=/opt/node22/bin:$PATH; fi",
+  "node -v",
+  "npm install --no-package-lock",
+]
 
 [phases.build]
 dependsOn = ["install"]
-cmds = ["npm run build"]
+cmds = [
+  "if [ -x /opt/node22/bin/node ]; then export PATH=/opt/node22/bin:$PATH; fi",
+  "node -v",
+  "npm run build",
+]
 
 [start]
-cmd = "npm start"
+cmd = "if [ -x /opt/node22/bin/node ]; then export PATH=/opt/node22/bin:$PATH; fi; npm start"
