@@ -6,9 +6,19 @@
 # Dashboard override, if you set one: NIXPACKS_NODE_VERSION=20
 # A Node 22 pin only works once the image is >=22.22 (NIXPACKS_NODE_VERSION=22
 # is not enough while Nixpacks still ships 22.11).
+# Install ignores package-lock.json. The versions that matter are pinned in
+# package.json (vite 6.4.5, @vitejs/plugin-react 4.7.0, react-router 7.18.5).
 
 [variables]
 NIXPACKS_NODE_VERSION = "20"
+
+[phases.install]
+dependsOn = ["setup"]
+cmds = ["npm install --no-package-lock"]
+
+[phases.build]
+dependsOn = ["install"]
+cmds = ["npm run build"]
 
 [start]
 cmd = "npm start"
