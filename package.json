@@ -2,7 +2,7 @@
   "name": "perdedor",
   "private": true,
   "version": "1.0.0",
-  "description": "Dashboard del backtest de rotaci\u00f3n trimestral al mayor perdedor, top 6 de DIA, QQQ y SPY.",
+  "description": "Dashboard del backtest de rotación trimestral al mayor perdedor, top 6 de DIA, QQQ y SPY.",
   "type": "module",
   "engines": {
     "node": ">=20.0.0"
