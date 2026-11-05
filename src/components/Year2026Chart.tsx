@@ -53,7 +53,7 @@ function monthTicks(dates: readonly string[]): string[] {
 }
 
 function markerText(event: RebalanceEvent): string {
-  return event.from === event.to ? event.to : event.from + " -> " + event.to;
+  return event.from === event.to ? event.to : `${event.from}\u2192${event.to}`;
 }
 
 function Tip({
@@ -108,7 +108,7 @@ export function Year2026Panel({ basket }: { basket: Basket }) {
 
   if (!model.ok) {
     return (
-      <Panel className="p-5">
+      <Panel className="p-5" >
         <p className="font-medium">No hay curva de 2026 para {basket.id}.</p>
         <p className="mt-2 text-sm text-muted">{model.message}</p>
       </Panel>
@@ -129,7 +129,7 @@ function Year2026Chart({ basket, rotation }: { basket: Basket; rotation: BasketR
   const heldName = holdingOf(basket, rotation.heldNow)?.name;
 
   const series = [
-    { key: "strategy", name: "Rotacion", color: palette.strategy, width: 2.6, dash: undefined as string | undefined },
+    { key: "strategy", name: "Rotación", color: palette.strategy, width: 2.6, dash: undefined },
     { key: "etf", name: basket.id, color: palette.ink, width: 2, dash: "5 4" },
     ...basket.holdings.map((holding, index) => ({
       key: holding.ticker,
@@ -157,20 +157,22 @@ function Year2026Chart({ basket, rotation }: { basket: Basket; rotation: BasketR
           <div className="max-w-3xl text-sm leading-6">
             <p>
               2026 arranca en <strong className="font-mono">{entry.to}</strong>
-              {entryName ? ` (${entryName})` : ""}, no en la tenencia mas pesada{" "}
+              {entryName ? ` (${entryName})` : ""}, no en la tenencia más pesada{" "}
               <span className="font-mono">{rotation.largest}</span>
               {largestName ? ` (${largestName})` : ""}. El {formatDate(entry.date)} la regla pasa de{" "}
-              <span className="font-mono">{entry.from}</span> a <span className="font-mono">{entry.to}</span>.
+              <span className="font-mono">{entry.from}</span> a <span className="font-mono">{entry.to}</span>: fue el peor del{" "}
+              {quarterLabel(entry.decidedBy)}.
             </p>
             <p className="mt-2">
               Hoy la curva sostiene <strong className="font-mono">{rotation.heldNow}</strong>
               {heldName ? ` (${heldName})` : ""}
               {rotation.heldNow === basket.current
-                ? ". Coincide con la semilla."
+                ? ", el mismo papel que «hoy sostiene» en la semilla."
                 : `. La semilla dice ${basket.current}.`}
             </p>
           </div>
         ) : null}
+
         <div className="mt-4 flex h-10 overflow-hidden rounded-full border border-line" aria-hidden>
           {rotation.segments.map((segment) => (
             <div
@@ -180,11 +182,16 @@ function Year2026Chart({ basket, rotation }: { basket: Basket; rotation: BasketR
                 flexGrow: Math.max(segment.sessions, 1),
                 background: colorOf.get(segment.ticker) ?? palette.strategy,
               }}
+              title={`${segment.ticker} del ${formatDateNumeric(segment.from)} al ${formatDateNumeric(segment.to)}`}
             >
               {segment.ticker}
             </div>
           ))}
         </div>
+        <p className="mt-2 text-xs text-faint">
+          Tramos en los que la rotación estuvo en cada papel. Si el trimestre elige al mismo, el tramo no se corta: la tabla de abajo igual anota la fecha.
+        </p>
+
         <div className="mt-4 flex flex-wrap items-center gap-2">
           {series.map((item) => {
             const off = hidden.has(item.key);
@@ -195,7 +202,7 @@ function Year2026Chart({ basket, rotation }: { basket: Basket; rotation: BasketR
                 aria-pressed={!off}
                 onClick={() => setHidden((current) => toggleKey(current, item.key))}
                 className={cn(
-                  "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm",
+                  "inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-strategy",
                   off ? "border-line text-faint" : "border-line bg-panel-2 text-ink",
                 )}
               >
@@ -204,52 +211,122 @@ function Year2026Chart({ basket, rotation }: { basket: Basket; rotation: BasketR
               </button>
             );
           })}
-          <button type="button" aria-pressed={logScale} onClick={() => setLogScale((value) => !value)} className="rounded-full border border-line px-3 py-1 text-sm">
+          <button
+            type="button"
+            aria-pressed={logScale}
+            onClick={() => setLogScale((value) => !value)}
+            className={cn(
+              "rounded-full border px-3 py-1 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-strategy",
+              logScale ? "border-strategy text-ink" : "border-line text-muted",
+            )}
+          >
             Escala log
           </button>
         </div>
+
         <div className="mt-4 h-96 w-full min-w-0">
           {visible.length === 0 ? (
-            <p className="grid h-full place-items-center text-sm text-muted">Activa al menos una serie.</p>
+            <p className="grid h-full place-items-center text-sm text-muted">Activá al menos una serie.</p>
           ) : (
             <ResponsiveContainer width="100%" height="100%" minWidth={0}>
               <LineChart data={rows} margin={{ top: 28, right: 12, left: 0, bottom: 0 }}>
                 <CartesianGrid stroke={palette.grid} vertical={false} />
-                <XAxis dataKey="date" ticks={ticks} tickFormatter={formatMonthTick} tick={{ fill: palette.muted, fontSize: 12 }} axisLine={false} tickLine={false} />
-                <YAxis scale={logScale ? "log" : "auto"} domain={["auto", "auto"]} tick={{ fill: palette.muted, fontSize: 12 }} axisLine={false} tickLine={false} width={48} tickFormatter={(value: number) => formatIndex(value)} />
-                <Tooltip content={(props) => <Tip active={props.active} label={props.label} payload={props.payload as readonly TipRow[] | undefined} order={order} />} />
+                <XAxis
+                  dataKey="date"
+                  ticks={ticks}
+                  tickFormatter={formatMonthTick}
+                  tick={{ fill: palette.muted, fontSize: 12, fontFamily: "IBM Plex Mono, ui-monospace, monospace" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  scale={logScale ? "log" : "auto"}
+                  domain={logScale ? ["auto", "auto"] : ["auto", "auto"]}
+                  tick={{ fill: palette.muted, fontSize: 12, fontFamily: "IBM Plex Mono, ui-monospace, monospace" }}
+                  axisLine={false}
+                  tickLine={false}
+                  width={48}
+                  tickFormatter={(value: number) => formatIndex(value)}
+                />
+                <Tooltip
+                  content={(props) => (
+                    <Tip
+                      active={props.active}
+                      label={props.label}
+                      payload={props.payload as readonly TipRow[] | undefined}
+                      order={order}
+                    />
+                  )}
+                />
                 <ReferenceLine y={100} stroke={palette.zero} />
                 {rotation.rebalances.map((event) => (
-                  <ReferenceLine key={event.date} x={event.date} stroke={palette.marker} strokeDasharray="3 3" label={{ value: markerText(event), fill: palette.strategy, fontSize: 11, position: "insideTop" }} />
+                  <ReferenceLine
+                    key={event.date}
+                    x={event.date}
+                    stroke={palette.marker}
+                    strokeDasharray="3 3"
+                    label={{
+                      value: markerText(event),
+                      fill: palette.strategy,
+                      fontSize: 11,
+                      position: "insideTop",
+                      fontFamily: "IBM Plex Mono, ui-monospace, monospace",
+                    }}
+                  />
                 ))}
                 {series.map((item) => (
-                  <Line key={item.key} type="monotone" dataKey={item.key} name={item.name} stroke={item.color} strokeWidth={item.width} strokeDasharray={item.dash} dot={false} hide={hidden.has(item.key)} isAnimationActive={!reduced} connectNulls />
+                  <Line
+                    key={item.key}
+                    type="monotone"
+                    dataKey={item.key}
+                    name={item.name}
+                    stroke={item.color}
+                    strokeWidth={item.width}
+                    strokeDasharray={item.dash}
+                    dot={false}
+                    hide={hidden.has(item.key)}
+                    isAnimationActive={!reduced}
+                    connectNulls
+                  />
                 ))}
               </LineChart>
             </ResponsiveContainer>
           )}
         </div>
+        <p className="mt-3 text-xs text-muted">
+          Base 100 en el cierre del {formatDate(rotation.baseDate)}. La línea vertical es el cierre del trimestre: ese día todavía rinde el papel anterior y el nuevo arranca al día hábil siguiente.
+          Precios: {rotation.source}. Último cierre de la curva: {formatDate(rotation.lastDate)}.
+        </p>
         <dl className="mt-4 grid gap-3 sm:grid-cols-2">
           <div className="rounded-xl bg-panel-2 px-3 py-3">
-            <dt className="text-xs text-faint">Esta curva</dt>
+            <dt className="text-xs text-faint">Esta curva, rotación al {formatDateNumeric(rotation.lastDate)}</dt>
             <dd className="mt-1 text-2xl"><SignedReturn value={rotation.strategyReturn} /></dd>
           </div>
           <div className="rounded-xl bg-panel-2 px-3 py-3">
             <dt className="text-xs text-faint">YTD 2026 en la semilla</dt>
-            <dd className="mt-1 text-2xl">{seedYear ? <SignedReturn value={seedYear.strategy} /> : "-"}</dd>
+            <dd className="mt-1 text-2xl">
+              {seedYear ? <SignedReturn value={seedYear.strategy} /> : "\u2014"}
+            </dd>
+            {seedYear?.note ? <p className="text-xs text-muted">{seedYear.note}</p> : null}
           </div>
         </dl>
+        <p className="mt-3 text-xs text-muted">
+          La tabla anual de la semilla no se toca. Esta curva aplica la misma regla con los cierres ajustados diarios. Si el décimo no coincide, manda la semilla para el YTD publicado y la curva para ver el camino.
+        </p>
       </Panel>
+
       <Panel className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[760px] border-collapse text-sm">
-            <caption className="px-4 py-3 text-left text-xs text-muted">Rotaciones al cierre de cada trimestre. El trimestre en curso no dispara rotacion.</caption>
+            <caption className="px-4 py-3 text-left text-xs text-muted">
+              Cada fila es un trimestre cerrado. Se rota al peor retorno de esos seis, medido entre cierres ajustados. El trimestre en curso no dispara rotación.
+            </caption>
             <thead>
               <tr className="border-b border-line text-left text-xs uppercase tracking-wide text-faint">
-                <th className="px-4 py-2">Trimestre</th>
-                <th className="px-3 py-2">Rotacion</th>
+                <th scope="col" className="px-4 py-2 font-medium">Trimestre</th>
+                <th scope="col" className="px-3 py-2 font-medium">Rotación</th>
                 {basket.holdings.map((holding) => (
-                  <th key={holding.ticker} className="px-3 py-2 text-right">{holding.ticker}</th>
+                  <th key={holding.ticker} scope="col" className="px-3 py-2 text-right font-medium">{holding.ticker}</th>
                 ))}
               </tr>
             </thead>
@@ -259,19 +336,51 @@ function Year2026Chart({ basket, rotation }: { basket: Basket; rotation: BasketR
                 const worst = event.scores[0]?.ticker;
                 return (
                   <tr key={event.date} className="border-b border-line/70">
-                    <th className="px-4 py-3 text-left font-normal">{quarterLabel(event.decidedBy)}<span className="block font-mono text-xs text-faint">{formatDateNumeric(event.date)}</span></th>
-                    <td className="px-3 py-3 font-mono">{event.from} -&gt; {event.to}</td>
+                    <th scope="row" className="px-4 py-3 text-left font-normal">
+                      <span className="block font-medium">{quarterLabel(event.decidedBy)}</span>
+                      <span className="font-mono text-xs text-faint">{formatDateNumeric(event.date)}</span>
+                    </th>
+                    <td className="px-3 py-3 font-mono">
+                      {event.from} \u2192 {event.to}
+                      {event.date === rotation.baseDate ? (
+                        <span className="mt-1 block font-sans text-xs text-muted">Arranque de 2026</span>
+                      ) : null}
+                      {event.from === event.to ? (
+                        <span className="mt-1 block font-sans text-xs text-muted">Sigue en el mismo papel</span>
+                      ) : null}
+                    </td>
                     {basket.holdings.map((holding) => {
                       const value = byTicker.get(holding.ticker);
+                      const marked = holding.ticker === worst;
                       return (
-                        <td key={holding.ticker} className={cn("px-3 py-3 text-right", holding.ticker === worst && "bg-strategy/15 font-semibold")}>
-                          {value === undefined ? "-" : <SignedReturn value={value} />}
+                        <td key={holding.ticker} className={cn("px-3 py-3 text-right", marked && "bg-strategy/15 font-semibold")}>
+                          {value === undefined ? "\u2014" : <SignedReturn value={value} />}
                         </td>
                       );
                     })}
                   </tr>
                 );
               })}
+              {rotation.partial ? (
+                <tr>
+                  <th scope="row" className="px-4 py-3 text-left font-normal">
+                    <span className="block font-medium">{quarterLabel(rotation.partial.id)} en curso</span>
+                    <span className="font-mono text-xs text-faint">
+                      {formatDateNumeric(rotation.partial.from)} \u2192 {formatDateNumeric(rotation.partial.to)}
+                    </span>
+                  </th>
+                  <td className="px-3 py-3 text-muted">Sin rotación todavía</td>
+                  {basket.holdings.map((holding) => {
+                    const value = rotation.partial?.scores.find((score) => score.ticker === holding.ticker)?.totalReturn;
+                    const marked = holding.ticker === rotation.partial?.scores[0]?.ticker;
+                    return (
+                      <td key={holding.ticker} className={cn("px-3 py-3 text-right", marked && "bg-strategy/10")}>
+                        {value === undefined ? "\u2014" : <SignedReturn value={value} />}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ) : null}
             </tbody>
           </table>
         </div>
