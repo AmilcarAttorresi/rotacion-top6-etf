@@ -30,7 +30,7 @@ La salida queda en `dist/`. Las rutas son absolutas desde la raíz del dominio. 
 
 El repo ya trae `railway.toml`, `nixpacks.toml` y `.nvmrc`. Railway corre `npm run build` y después `npm start`, que sirve `dist` con fallback a `index.html` (hace falta para `/canasta/dia` y el resto). Escucha en `0.0.0.0:$PORT`. No hace falta Docker ni variables secretas.
 
-Nixpacks toma Node desde `NIXPACKS_NODE_VERSION=20` (está en `nixpacks.toml` y en `.nvmrc`). Si el servicio tiene una variable en el dashboard, dejala en `NIXPACKS_NODE_VERSION=20`. No pongas `22`: hoy esa major instala 22.11.0 y el build se cae. Node 22.22 o superior también serviría, pero Nixpacks todavía no lo entrega con `NIXPACKS_NODE_VERSION=22`.
+Nixpacks toma Node desde `NIXPACKS_NODE_VERSION=20` (está en `nixpacks.toml` y en `.nvmrc`). Si el servicio tiene una variable en el dashboard, dejala en `NIXPACKS_NODE_VERSION=20`. No pongas `22`: hoy esa major instala 22.11.0 y el build se cae. El install de Nixpacks es `npm install --no-package-lock`: las versiones que importan están fijas en `package.json` (Vite 6.4.5, plugin React 4.7.0, React Router 7.18.5). Node 22.22 o superior también serviría, pero Nixpacks todavía no lo entrega con `NIXPACKS_NODE_VERSION=22`.
 
 ## Cómo actualizar los totales
 
