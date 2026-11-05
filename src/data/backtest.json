@@ -1,0 +1,93 @@
+{
+  "window": {"start": "2020-01-02", "end": "2026-11-04", "years": 6.84},
+  "rules": "Start in largest current holding; each quarter rotate 100% into the name that fell most among the 6. Adjusted closes Yahoo Finance. Fixed current basket (survivorship bias). SPX proxy = SPY. Alphabet = GOOGL only.",
+  "baskets": {
+    "DIA": {
+      "label": "DIA (Dow Jones)",
+      "holdingsAsOf": "2026-11-03",
+      "source": "State Street SSGA Fund Top Holdings",
+      "holdings": [
+        {"ticker": "GS", "name": "Goldman Sachs", "weight": 0.1028},
+        {"ticker": "CAT", "name": "Caterpillar", "weight": 0.0716},
+        {"ticker": "MSFT", "name": "Microsoft", "weight": 0.0598},
+        {"ticker": "AMGN", "name": "Amgen", "weight": 0.0529},
+        {"ticker": "V", "name": "Visa", "weight": 0.0482},
+        {"ticker": "UNH", "name": "UnitedHealth", "weight": 0.0464}
+      ],
+      "start": "GS",
+      "current": "CAT",
+      "strategy": {"total": 2.686, "cagr": 0.210, "mdd": -0.456},
+      "ewReb": {"total": 2.585, "cagr": 0.205, "mdd": -0.321},
+      "ewBh": {"total": 2.201, "cagr": 0.185, "mdd": -0.321},
+      "etf": {"total": 1.085, "cagr": 0.113, "mdd": -0.367},
+      "bestBh": {"ticker": "GS", "total": 3.634},
+      "yearByYear": [
+        {"year": 2020, "strategy": 0.337, "ewReb": 0.205, "etf": 0.083},
+        {"year": 2021, "strategy": 0.155, "ewReb": 0.268, "etf": 0.208},
+        {"year": 2022, "strategy": 0.043, "ewReb": 0.011, "etf": -0.070},
+        {"year": 2023, "strategy": 0.627, "ewReb": 0.239, "etf": 0.160},
+        {"year": 2024, "strategy": 0.096, "ewReb": 0.176, "etf": 0.148},
+        {"year": 2025, "strategy": 0.660, "ewReb": 0.246, "etf": 0.147},
+        {"year": 2026, "strategy": -0.227, "ewReb": 0.278, "etf": 0.122, "note": "YTD al 4/11/2026"}
+      ]
+    },
+    "QQQ": {
+      "label": "QQQ (Nasdaq-100)",
+      "holdingsAsOf": "2026-11-03",
+      "source": "Invesco QQQ holdings API",
+      "holdings": [
+        {"ticker": "NVDA", "name": "NVIDIA", "weight": 0.0815},
+        {"ticker": "AAPL", "name": "Apple", "weight": 0.0792},
+        {"ticker": "MSFT", "name": "Microsoft", "weight": 0.0633},
+        {"ticker": "AMZN", "name": "Amazon", "weight": 0.0442},
+        {"ticker": "MU", "name": "Micron", "weight": 0.0436},
+        {"ticker": "AMD", "name": "AMD", "weight": 0.0357}
+      ],
+      "start": "NVDA",
+      "current": "MU",
+      "strategy": {"total": 4.802, "cagr": 0.293, "mdd": -0.496},
+      "ewReb": {"total": 10.476, "cagr": 0.429, "mdd": -0.455},
+      "ewBh": {"total": 10.597, "cagr": 0.431, "mdd": -0.492},
+      "etf": {"total": 2.329, "cagr": 0.192, "mdd": -0.351},
+      "bestBh": {"ticker": "NVDA", "total": 32.595},
+      "yearByYear": [
+        {"year": 2020, "strategy": 2.198, "ewReb": 0.766, "etf": 0.460},
+        {"year": 2021, "strategy": 0.392, "ewReb": 0.484, "etf": 0.274},
+        {"year": 2022, "strategy": -0.324, "ewReb": -0.420, "etf": -0.326},
+        {"year": 2023, "strategy": 0.630, "ewReb": 1.014, "etf": 0.549},
+        {"year": 2024, "strategy": -0.038, "ewReb": 0.362, "etf": 0.256},
+        {"year": 2025, "strategy": 0.584, "ewReb": 0.558, "etf": 0.208},
+        {"year": 2026, "strategy": -0.224, "ewReb": 0.766, "etf": 0.130, "note": "YTD al 4/11/2026"}
+      ]
+    },
+    "SPY": {
+      "label": "SPY (proxy S&P 500 / SPX)",
+      "holdingsAsOf": "2026-11-04",
+      "source": "State Street SSGA Fund Top Holdings",
+      "holdings": [
+        {"ticker": "AAPL", "name": "Apple", "weight": 0.0769},
+        {"ticker": "NVDA", "name": "NVIDIA", "weight": 0.0730},
+        {"ticker": "MSFT", "name": "Microsoft", "weight": 0.0622},
+        {"ticker": "AMZN", "name": "Amazon", "weight": 0.0394},
+        {"ticker": "GOOGL", "name": "Alphabet A", "weight": 0.0256},
+        {"ticker": "AVGO", "name": "Broadcom", "weight": 0.0233}
+      ],
+      "start": "AAPL",
+      "current": "AVGO",
+      "strategy": {"total": 6.674, "cagr": 0.347, "mdd": -0.425},
+      "ewReb": {"total": 6.913, "cagr": 0.353, "mdd": -0.398},
+      "ewBh": {"total": 9.161, "cagr": 0.404, "mdd": -0.426},
+      "etf": {"total": 1.596, "cagr": 0.150, "mdd": -0.337},
+      "bestBh": {"ticker": "NVDA", "total": 32.595},
+      "yearByYear": [
+        {"year": 2020, "strategy": 0.381, "ewReb": 0.636, "etf": 0.172},
+        {"year": 2021, "strategy": 0.231, "ewReb": 0.547, "etf": 0.287},
+        {"year": 2022, "strategy": -0.169, "ewReb": -0.338, "etf": -0.182},
+        {"year": 2023, "strategy": 0.990, "ewReb": 0.948, "etf": 0.262},
+        {"year": 2024, "strategy": 0.451, "ewReb": 0.654, "etf": 0.249},
+        {"year": 2025, "strategy": 0.856, "ewReb": 0.330, "etf": 0.177},
+        {"year": 2026, "strategy": 0.014, "ewReb": 0.103, "etf": 0.133, "note": "YTD al 4/11/2026"}
+      ]
+    }
+  }
+}
